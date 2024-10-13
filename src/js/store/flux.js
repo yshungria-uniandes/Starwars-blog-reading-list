@@ -12,7 +12,12 @@ const getState = ({ getStore, getActions, setStore }) => {
 					background: "white",
 					initial: "white"
 				}
-			]
+			],
+
+			characters: [],
+			planets: [],
+			vehicles: [],
+			favorites: []
 		},
 		actions: {
 			// Use getActions to call a function within a fuction
@@ -24,6 +29,62 @@ const getState = ({ getStore, getActions, setStore }) => {
 					fetch().then().then(data => setStore({ "foo": data.bar }))
 				*/
 			},
+
+			fetchCharacters : async () => {
+				const response = await fetch("https://www.swapi.tech/api/people");
+				const data = await response.json();
+				console.log(data.results);
+				setStore({ characters: data.results });
+				
+			},
+
+			fetchPlanets : async () => {
+				const response = await fetch("https://www.swapi.tech/api/planets");
+				const data = await response.json();
+				console.log(data.results);
+				setStore({ planets: data.results });
+			},
+
+			fetchVehicles : async () => {
+				const response = await fetch("https://www.swapi.tech/api/vehicles/");
+				const data = await response.json();
+				console.log(data.results);
+				setStore({ vehicles: data.results });
+			},
+
+			fetchCharactersData : async (id) => {
+				const response = await fetch(`https://www.swapi.tech/api/people/${id}`);
+				const data = await response.json();
+				console.log(data.result);
+				setStore({ characters: data.result });
+			},
+
+			fetchPlanetsData : async (id) => {
+				const response = await fetch(`https://www.swapi.tech/api/planets/${id}`);
+				const data = await response.json();
+				console.log(data.result);
+				setStore({ planets: data.result });
+			},
+
+			fetchVehiclesData : async (id) => {
+				const response = await fetch(`https://www.swapi.tech/api/vehicles/${id}`);
+				const data = await response.json();
+				console.log(data.result);
+				setStore({ vehicles: data.result });
+			},
+
+			addToFavorites: (favorite) => {
+				const store = getStore();
+				const favorites = store.favorites.concat(favorite);
+				setStore({ favorites: favorites });
+			},
+
+			removeFromFavorites: (index) => {
+				const store = getStore();
+				const favorites = store.favorites.filter((favorite, i) => i !== index);
+				setStore({ favorites: favorites });
+			},
+
 			changeColor: (index, color) => {
 				//get the store
 				const store = getStore();
