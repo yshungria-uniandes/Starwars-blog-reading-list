@@ -4,8 +4,7 @@ import ScrollToTop from "./component/scrollToTop";
 
 
 import { Home } from "./views/home";
-import { Demo } from "./views/demo";
-import { Single } from "./views/single"
+import { CharacterDetail } from "./views/characterDetail";
 
 import injectContext from "./store/appContext";
 
@@ -27,6 +26,7 @@ const Layout = () => {
 					<NavbarVertical />
 					<Routes>
 						<Route path="/" element={<Home />} />
+						<Route path="/character/:id" element={<CharacterDetail />} />
 						<Route path="*" element={<h1>Not found!</h1>} />
 					</Routes>
 					<Footer />

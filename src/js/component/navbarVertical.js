@@ -6,7 +6,7 @@ export const NavbarVertical = () => {
   return (
     <div className="navbar-vertical">
       <h4 className="pb-3 text-center">Star Wars</h4>
-      <ul className="nav flex-column">
+      <ul className="p-5 nav flex-column">
         <li className="nav-item">
           <Link to="/" className="nav-link">
             Characters

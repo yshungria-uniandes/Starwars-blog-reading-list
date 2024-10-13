@@ -13,8 +13,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 					initial: "white"
 				}
 			],
-
 			characters: [],
+			characterData: [],
 			planets: [],
 			vehicles: [],
 			favorites: []
@@ -30,43 +30,55 @@ const getState = ({ getStore, getActions, setStore }) => {
 				*/
 			},
 
-			fetchCharacters : async () => {
+			fetchCharacters: async () => {
 				const response = await fetch("https://www.swapi.tech/api/people");
 				const data = await response.json();
 				console.log(data.results);
 				setStore({ characters: data.results });
-				
+
 			},
 
-			fetchPlanets : async () => {
+			fetchCharacterData: async (id) => {
+				try {
+				  const response = await fetch(`https://www.swapi.tech/api/people/${id}`);
+				  const data = await response.json();
+				  console.log(data.result);
+				  setStore({ characterData: data.result }); // Guardamos solo las propiedades del personaje
+				} catch (error) {
+				  console.error("Error fetching character data:", error);
+				}
+			  },
+			  
+
+			fetchPlanets: async () => {
 				const response = await fetch("https://www.swapi.tech/api/planets");
 				const data = await response.json();
 				console.log(data.results);
 				setStore({ planets: data.results });
 			},
 
-			fetchVehicles : async () => {
+			fetchVehicles: async () => {
 				const response = await fetch("https://www.swapi.tech/api/vehicles/");
 				const data = await response.json();
 				console.log(data.results);
 				setStore({ vehicles: data.results });
 			},
 
-			fetchCharactersData : async (id) => {
+			fetchCharactersData: async (id) => {
 				const response = await fetch(`https://www.swapi.tech/api/people/${id}`);
 				const data = await response.json();
 				console.log(data.result);
 				setStore({ characters: data.result });
 			},
 
-			fetchPlanetsData : async (id) => {
+			fetchPlanetsData: async (id) => {
 				const response = await fetch(`https://www.swapi.tech/api/planets/${id}`);
 				const data = await response.json();
 				console.log(data.result);
 				setStore({ planets: data.result });
 			},
 
-			fetchVehiclesData : async (id) => {
+			fetchVehiclesData: async (id) => {
 				const response = await fetch(`https://www.swapi.tech/api/vehicles/${id}`);
 				const data = await response.json();
 				console.log(data.result);
