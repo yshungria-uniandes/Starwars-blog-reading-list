@@ -10,15 +10,15 @@ export const Home = () => {
 	const { store, actions } = useContext(Context);
 
 	const handleAddFavorite = (character) => {
-		// Verificamos si el personaje ya está en favoritos
-		const favoriteExists = store.favorites.find(fav => fav.uid === character.uid);
+		// Verificamos si el personaje ya está en la lista de favoritos de personajes
+		const favoriteExists = store.characterFavorites.find(fav => fav.uid === character.uid);
 
 		if (favoriteExists) {
 			// Si el personaje ya está en favoritos, incrementamos el contador
-			actions.incrementFavoriteCount(character.uid);
+			actions.incrementFavoriteCount(character.uid, "character");
 		} else {
 			// Si no está en favoritos, lo añadimos con un contador inicial de 1
-			actions.addToFavorites({ ...character, count: 1 });
+			actions.addToFavorites({ ...character, count: 1 }, "character");
 		}
 	};
 
@@ -31,21 +31,21 @@ export const Home = () => {
 						<Dropdown.Toggle variant="warning" id="dropdown-basic" className="heart-counter">
 							<FontAwesomeIcon icon={solidHeart} />
 							{/* Badge para el contador de favoritos */}
-							{store.favorites.length > 0 && (
-								<span className="badge">{store.favorites.length}</span>
+							{store.characterFavorites.length > 0 && (
+								<span className="badge">{store.characterFavorites.length}</span>
 							)}
 						</Dropdown.Toggle>
 
 						<Dropdown.Menu>
-							{store.favorites.length === 0 ? (
-								<Dropdown.Item disabled>No tienes favoritos aún.</Dropdown.Item>
+							{store.characterFavorites.length === 0 ? (
+								<Dropdown.Item disabled>No tienes personajes favoritos aún.</Dropdown.Item>
 							) : (
-								store.favorites.map((favorite, index) => (
+								store.characterFavorites.map((favorite, index) => (
 									<Dropdown.Item key={index} className="d-flex justify-content-between align-items-center">
 										<span>{favorite.name} (Añadido {favorite.count} {favorite.count > 1 ? 'veces' : 'vez'})</span>
 										<button
 											className="btn btn-danger btn-sm ml-2"
-											onClick={() => actions.removeFromFavorites(index)}
+											onClick={() => actions.removeFromFavorites(favorite.uid, "character")}
 										>
 											<FontAwesomeIcon icon={solidHeart} /> {/* Icono de corazón lleno para eliminar */}
 										</button>

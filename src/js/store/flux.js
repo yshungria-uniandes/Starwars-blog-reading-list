@@ -14,111 +14,101 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			],
 			characters: [],
-			characterData: [],
+			characterData: [], // Detalles del personaje específico
 			planets: [],
+			planetData: [], // Detalles del planeta específico
 			vehicles: [],
-			favorites: []
+			characterFavorites: [], // Favoritos de personajes
+			planetFavorites: [] // Favoritos de planetas
 		},
 		actions: {
-			// Use getActions to call a function within a fuction
-			exampleFunction: () => {
-				getActions().changeColor(0, "green");
-			},
-			loadSomeData: () => {
-				/**
-					fetch().then().then(data => setStore({ "foo": data.bar }))
-				*/
-			},
-
+			// Llamada a la API para obtener personajes
 			fetchCharacters: async () => {
 				const response = await fetch("https://www.swapi.tech/api/people");
 				const data = await response.json();
-				console.log(data.results);
 				setStore({ characters: data.results });
-
 			},
 
+			// Llamada a la API para obtener detalles de un personaje específico
 			fetchCharacterData: async (id) => {
 				try {
-				  const response = await fetch(`https://www.swapi.tech/api/people/${id}`);
-				  const data = await response.json();
-				  console.log(data.result);
-				  setStore({ characterData: data.result }); // Guardamos solo las propiedades del personaje
+					const response = await fetch(`https://www.swapi.tech/api/people/${id}`);
+					const data = await response.json();
+					setStore({ characterData: data.result }); // Guardamos solo las propiedades del personaje
 				} catch (error) {
-				  console.error("Error fetching character data:", error);
+					console.error("Error fetching character data:", error);
 				}
-			  },
-			  
+			},
 
+			// Llamada a la API para obtener planetas
 			fetchPlanets: async () => {
 				const response = await fetch("https://www.swapi.tech/api/planets");
 				const data = await response.json();
-				console.log(data.results);
 				setStore({ planets: data.results });
 			},
 
+			// Llamada a la API para obtener detalles de un planeta específico
+			fetchPlanetData: async (id) => {
+				try {
+					const response = await fetch(`https://www.swapi.tech/api/planets/${id}`);
+					const data = await response.json();
+					setStore({ planetData: data.result }); // Guardamos solo las propiedades del planeta
+				} catch (error) {
+					console.error("Error fetching planet data:", error);
+				}
+			},
+
+			// Llamada a la API para obtener vehículos
 			fetchVehicles: async () => {
 				const response = await fetch("https://www.swapi.tech/api/vehicles/");
 				const data = await response.json();
-				console.log(data.results);
 				setStore({ vehicles: data.results });
 			},
 
-			fetchCharactersData: async (id) => {
-				const response = await fetch(`https://www.swapi.tech/api/people/${id}`);
-				const data = await response.json();
-				console.log(data.result);
-				setStore({ characters: data.result });
-			},
-
-			fetchPlanetsData: async (id) => {
-				const response = await fetch(`https://www.swapi.tech/api/planets/${id}`);
-				const data = await response.json();
-				console.log(data.result);
-				setStore({ planets: data.result });
-			},
-
-			fetchVehiclesData: async (id) => {
-				const response = await fetch(`https://www.swapi.tech/api/vehicles/${id}`);
-				const data = await response.json();
-				console.log(data.result);
-				setStore({ vehicles: data.result });
-			},
-
-			addToFavorites: (favorite) => {
+			// Agregar a favoritos de personajes o planetas
+			addToFavorites: (item, type) => {
 				const store = getStore();
-				const favorites = store.favorites.concat(favorite);
-				setStore({ favorites: favorites });
+				const favorites = store[type + "Favorites"];
+				const favoriteExists = favorites.find(fav => fav.uid === item.uid);
+
+				// Si ya existe en favoritos, incrementamos el contador
+				if (favoriteExists) {
+					const updatedFavorites = favorites.map(fav => {
+						if (fav.uid === item.uid) fav.count += 1;
+						return fav;
+					});
+					setStore({ [type + "Favorites"]: updatedFavorites });
+				} else {
+					// Si no existe, lo añadimos con un contador inicial de 1
+					const newFavorites = [...favorites, { ...item, count: 1 }];
+					setStore({ [type + "Favorites"]: newFavorites });
+				}
 			},
 
-			incrementFavoriteCount: (uid) => {
+			// Incrementar el contador de favoritos para personajes o planetas
+			incrementFavoriteCount: (uid, type) => {
 				const store = getStore();
-				const favorites = store.favorites.map(favorite => {
+				const favorites = store[type + "Favorites"];
+				const updatedFavorites = favorites.map(favorite => {
 					if (favorite.uid === uid) favorite.count += 1;
 					return favorite;
 				});
-				
-				setStore({ favorites: favorites });
+				setStore({ [type + "Favorites"]: updatedFavorites });
 			},
 
-			removeFromFavorites: (index) => {
+			// Eliminar de favoritos (personajes o planetas)
+			removeFromFavorites: (uid, type) => {
 				const store = getStore();
-				const favorites = store.favorites.filter((favorite, i) => i !== index);
-				setStore({ favorites: favorites });
+				const updatedFavorites = store[type + "Favorites"].filter(fav => fav.uid !== uid);
+				setStore({ [type + "Favorites"]: updatedFavorites });
 			},
 
 			changeColor: (index, color) => {
-				//get the store
 				const store = getStore();
-
-				//we have to loop the entire demo array to look for the respective index
-				//and change its color
 				const demo = store.demo.map((elm, i) => {
 					if (i === index) elm.background = color;
 					return elm;
 				});
-
-				//reset the global store
 				setStore({ demo: demo });
 			}
 		}
