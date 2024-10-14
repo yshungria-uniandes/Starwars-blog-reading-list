@@ -91,6 +91,16 @@ const getState = ({ getStore, getActions, setStore }) => {
 				setStore({ favorites: favorites });
 			},
 
+			incrementFavoriteCount: (uid) => {
+				const store = getStore();
+				const favorites = store.favorites.map(favorite => {
+					if (favorite.uid === uid) favorite.count += 1;
+					return favorite;
+				});
+				
+				setStore({ favorites: favorites });
+			},
+
 			removeFromFavorites: (index) => {
 				const store = getStore();
 				const favorites = store.favorites.filter((favorite, i) => i !== index);
