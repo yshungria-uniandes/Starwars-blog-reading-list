@@ -6,7 +6,7 @@ import { faHeart as solidHeart } from '@fortawesome/free-solid-svg-icons'; // Co
 import Dropdown from 'react-bootstrap/Dropdown'; // Importar el Dropdown de Bootstrap
 import "../../styles/home.css"; // Importar los estilos personalizados
 
-export const Home = () => {
+export const Characters = () => {
 	const { store, actions } = useContext(Context);
 
 	const handleAddFavorite = (character) => {

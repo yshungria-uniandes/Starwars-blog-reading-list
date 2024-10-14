@@ -8,7 +8,7 @@ export const NavbarVertical = () => {
       <h4 className="pb-3 text-center">Star Wars</h4>
       <ul className="p-5 nav flex-column">
         <li className="nav-item">
-          <Link to="/" className="nav-link">
+          <Link to="/characters" className="nav-link">
             Characters
           </Link>
         </li>

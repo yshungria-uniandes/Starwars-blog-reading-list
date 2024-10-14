@@ -14,64 +14,76 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			],
 			characters: [],
-			characterData: [], // Detalles del personaje específico
+			characterData: [],
 			planets: [],
-			planetData: [], // Detalles del planeta específico
-			vehicles: [],
-			characterFavorites: [], // Favoritos de personajes
-			planetFavorites: [] // Favoritos de planetas
+			planetData: [],
+			vehicles: [], // Almacenar la lista de vehículos
+			vehicleData: [], // Almacenar los detalles de un vehículo específico
+			characterFavorites: [],
+			planetFavorites: [],
+			vehicleFavorites: [] // Favoritos de vehículos
 		},
 		actions: {
-			// Llamada a la API para obtener personajes
+			// Obtener lista de personajes
 			fetchCharacters: async () => {
 				const response = await fetch("https://www.swapi.tech/api/people");
 				const data = await response.json();
 				setStore({ characters: data.results });
 			},
 
-			// Llamada a la API para obtener detalles de un personaje específico
+			// Obtener detalles de un personaje específico
 			fetchCharacterData: async (id) => {
 				try {
 					const response = await fetch(`https://www.swapi.tech/api/people/${id}`);
 					const data = await response.json();
-					setStore({ characterData: data.result }); // Guardamos solo las propiedades del personaje
+					setStore({ characterData: data.result });
 				} catch (error) {
 					console.error("Error fetching character data:", error);
 				}
 			},
 
-			// Llamada a la API para obtener planetas
+			// Obtener lista de planetas
 			fetchPlanets: async () => {
 				const response = await fetch("https://www.swapi.tech/api/planets");
 				const data = await response.json();
 				setStore({ planets: data.results });
 			},
 
-			// Llamada a la API para obtener detalles de un planeta específico
-			fetchPlanetData: async (id) => {
+			// Obtener detalles de un planeta específico
+			fetchPlanetsData: async (id) => {
 				try {
 					const response = await fetch(`https://www.swapi.tech/api/planets/${id}`);
 					const data = await response.json();
-					setStore({ planetData: data.result }); // Guardamos solo las propiedades del planeta
+					setStore({ planetData: data.result });
 				} catch (error) {
 					console.error("Error fetching planet data:", error);
 				}
 			},
 
-			// Llamada a la API para obtener vehículos
+			// Obtener lista de vehículos
 			fetchVehicles: async () => {
-				const response = await fetch("https://www.swapi.tech/api/vehicles/");
+				const response = await fetch("https://www.swapi.tech/api/vehicles");
 				const data = await response.json();
 				setStore({ vehicles: data.results });
 			},
 
-			// Agregar a favoritos de personajes o planetas
+			// Obtener detalles de un vehículo específico
+			fetchVehicleData: async (id) => {
+				try {
+					const response = await fetch(`https://www.swapi.tech/api/vehicles/${id}`);
+					const data = await response.json();
+					setStore({ vehicleData: data.result });
+				} catch (error) {
+					console.error("Error fetching vehicle data:", error);
+				}
+			},
+
+			// Agregar a favoritos (personajes, planetas o vehículos)
 			addToFavorites: (item, type) => {
 				const store = getStore();
 				const favorites = store[type + "Favorites"];
 				const favoriteExists = favorites.find(fav => fav.uid === item.uid);
 
-				// Si ya existe en favoritos, incrementamos el contador
 				if (favoriteExists) {
 					const updatedFavorites = favorites.map(fav => {
 						if (fav.uid === item.uid) fav.count += 1;
@@ -79,13 +91,12 @@ const getState = ({ getStore, getActions, setStore }) => {
 					});
 					setStore({ [type + "Favorites"]: updatedFavorites });
 				} else {
-					// Si no existe, lo añadimos con un contador inicial de 1
 					const newFavorites = [...favorites, { ...item, count: 1 }];
 					setStore({ [type + "Favorites"]: newFavorites });
 				}
 			},
 
-			// Incrementar el contador de favoritos para personajes o planetas
+			// Incrementar el contador de favoritos (para personajes, planetas o vehículos)
 			incrementFavoriteCount: (uid, type) => {
 				const store = getStore();
 				const favorites = store[type + "Favorites"];
@@ -96,20 +107,11 @@ const getState = ({ getStore, getActions, setStore }) => {
 				setStore({ [type + "Favorites"]: updatedFavorites });
 			},
 
-			// Eliminar de favoritos (personajes o planetas)
+			// Eliminar de favoritos (personajes, planetas o vehículos)
 			removeFromFavorites: (uid, type) => {
 				const store = getStore();
 				const updatedFavorites = store[type + "Favorites"].filter(fav => fav.uid !== uid);
 				setStore({ [type + "Favorites"]: updatedFavorites });
-			},
-
-			changeColor: (index, color) => {
-				const store = getStore();
-				const demo = store.demo.map((elm, i) => {
-					if (i === index) elm.background = color;
-					return elm;
-				});
-				setStore({ demo: demo });
 			}
 		}
 	};
