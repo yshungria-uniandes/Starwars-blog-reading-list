@@ -69,6 +69,7 @@ export const Planets = () => {
 						<div className="card h-100">
 							<img
 								src={`https://starwars-visualguide.com/assets/img/planets/${planet.uid}.jpg`}
+								onError={e => (e.target.src = "https://via.placeholder.com/400x200")}
 								className="card-img-top"
 								alt={planet.name}
 							/>

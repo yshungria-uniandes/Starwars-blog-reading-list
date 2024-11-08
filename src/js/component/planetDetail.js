@@ -14,7 +14,7 @@ export const PlanetDetail = () => {
     const fetchPlanetDetails = async () => {
       try {
         setLoading(true); // Iniciar la carga
-        await actions.fetchPlanetData(id); // Llamar a la acción para obtener los datos del planeta
+        await actions.fetchPlanetsData(id); // Llamar a la acción para obtener los datos del planeta
         setLoading(false); // Finalizamos la carga
       } catch (err) {
         console.error("Error fetching planet details:", err);
@@ -66,6 +66,7 @@ export const PlanetDetail = () => {
         <div className="col-md-4 text-center">
           <img
             src={`https://starwars-visualguide.com/assets/img/planets/${id}.jpg`}
+            onError={e => (e.target.src = "https://via.placeholder.com/400x200")}
             alt={name}
             className="img-fluid mb-3 shadow-lg rounded"
             style={{ maxWidth: "100%" }}

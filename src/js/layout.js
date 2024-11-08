@@ -16,6 +16,7 @@ import injectContext from "./store/appContext";
 
 import { NavbarVertical } from "./component/navbarVertical";
 import { Footer } from "./component/footer";
+import { Home } from "./views/home";
 
 
 //create your first component
@@ -31,6 +32,7 @@ const Layout = () => {
 				<ScrollToTop>
 					<NavbarVertical />
 					<Routes>
+						<Route path="/" element={<Home />} />
 						<Route path="/characters" element={<Characters />} />
 						<Route path="/character/:id" element={<CharacterDetail />} />
 
